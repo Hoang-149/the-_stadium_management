@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ADMIN - COMPANY REPORT</title>
+    <!--    Link-->
+    <div th:insert="~{template.html::link}"></div>
+</head>
+<body>
+<div class="app">
+    <!--    Header-->
+    <div th:insert="~{template.html::header}"></div>
+    <!-- Content -->
+    <div class="content row my-3 mx-3">
+        <div class="col-2">
+            <!-- Menu -->
+            <div th:insert="~{template.html::menu_report}"></div>
+        </div>
+        <div class="col-10">
+            <div class="row">
+                <div class="col-6 border border-success shadow-sm bg-info text-center py-3">
+                    <h5 th:text="'Khách hàng: ' + ${countUser}"></h5>
+                </div>
+                <div class="col-6 border border-success shadow-sm bg-danger text-center py-3">
+                    <h5 th:text="'Sân bóng: ' + ${countCompany}"></h5>
+                </div>
+            </div>
+            <div class="row py-3">
+                <div class="col-8 py-3 d-flex justify-content-center">
+                    <div class="w-50">
+                        <canvas id="myChart"></canvas>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                    <script>
+                        const companyReport = async () => {
+                            const respone = await fetch('http://localhost:8080/api/admin/report-company');
+                            const myJson = await respone.json();
+                            let charLabel = []
+                            let charInfo = []
+
+                            for (let i = 0; i < myJson.length; i++) {
+                                charLabel.push(myJson[i].name)
+                                charInfo.push(myJson[i].amount)
+                            }
+
+                            const data = {
+                                labels: charLabel,
+                                datasets: [{
+                                    label: 'Số lượng sân bóng',
+                                    data: charInfo,
+                                    backgroundColor: [
+                                        'rgb(255, 99, 132)',
+                                        'rgb(54, 162, 235)',
+                                        'rgb(255, 205, 86)',
+                                        'rgb(174, 33, 190)',
+                                        'rgb(255, 0, 0)',
+                                        'rgb(60, 153, 29)'
+                                    ],
+                                    hoverOffset: 4
+                                }]
+                            };
+
+                            console.log(data)
+
+                            const config = {
+                                type: 'doughnut',
+                                data: data,
+                            };
+                            let ctx = document.getElementById("myChart").getContext("2d")
+                            new Chart(ctx, config)
+                        }
+                        companyReport()
+
+
+                    </script>
+
+
+                </div>
+                <div class="col-4">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Quận/Huyện</th>
+                            <th scope="col">Số lượng sân bóng</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="align-middle" th:each="reportCompany, iter: ${reportCompanyList}">
+                            <th scope="row" th:text="${iter.count}"></th>
+                            <td th:text="${reportCompany.getName()}"></td>
+                            <td th:text="${reportCompany.getAmount()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--    JS-->
+<div th:insert="~{template.html::script-js}"></div>
+
+</body>
+</html>

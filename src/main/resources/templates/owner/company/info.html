@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OWNER - MY COMPANY - INFO</title>
+    <!--    Link-->
+    <div th:insert="~{template.html::link}"></div>
+</head>
+<body>
+<div class="app">
+    <!--    Header-->
+    <div th:insert="~{template.html::header}"></div>
+    <!-- Content -->
+    <div class="content row my-3 mx-3">
+        <div class="col-2">
+            <!--    Menu-->
+            <div>
+                <div class="d-flex">
+                    <h4 class="text-white pt-3 px-3">CHỦ SÂN</h4>
+                </div>
+                <hr>
+                <ul class="list-group admin__menu__left">
+                    <a class="text-decoration-none" href="/owner/myCompany">
+                        <li class="list-group-item bg-success text-white fw-bold py-3">SÂN BÓNG CỦA TÔI</li>
+                    </a>
+                    <a class="text-decoration-none" href="/owner/booking">
+                        <li class="list-group-item bg-success text-white fw-bold py-3">QUẢN LÝ ĐƠN ĐẶT SÂN</li>
+                    </a>
+                    <a class="text-decoration-none" href="/owner/report-income"><li class="list-group-item bg-success text-white fw-bold py-3">THỐNG KÊ DOANH THU</li></a>
+                </ul>
+            </div>
+        </div>
+        <div class="col-10">
+            <h4 class="text-danger">THÔNG TIN SÂN BÓNG</h4>
+            <form class="col-8 ms-5 mt-3" th:action="@{/owner/myCompany/editInfo}" method="post" th:object="${company}">
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">ID</label>
+                    <input readonly type="text" class="form-control" th:field="*{id}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Tên sân</label>
+                    <input type="text" class="form-control" th:field="*{name}">
+                    <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Hình ảnh</label>
+                    <img class="p-2 d-block mb-3" th:src="@{'/public/img/company/' + *{image}}" alt="Company image" style="width: 220px; height: 220px; border: 1px solid rgb(0 0 0 / 21%);">
+                    <input type="file" class="form-control" th:field="*{image}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Số điện thoại</label>
+                    <input type="text" class="form-control" th:field="*{phoneNumber}">
+                    <span class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Email</label>
+                    <input type="text" class="form-control" th:field="*{email}">
+                    <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Địa chỉ</label>
+                    <input type="text" class="form-control" th:field="*{address}">
+                    <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Map URL</label>
+                    <input type="text" class="form-control" th:field="*{mapUrl}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Quận/Huyện</label>
+                    <select class="form-select" aria-label="Default select example" th:field="*{location}">
+                        <option value="">----- Chọn Quận/Huyện -----</option>
+                        <option th:each="location : ${locationList}" th:value="${location.id}" th:text="${location.name}"></option>
+                    </select>
+                </div>
+                <div hidden class="mb-3">
+                    <label class="form-label text-success fw-bold">Chủ sân</label>
+                    <input type="text" class="form-control" th:field="*{user}">
+                    <span class="text-danger" th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></span>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Cập nhật</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!--    JS-->
+<div th:insert="~{template.html::script-js}"></div>
+<script>
+    function showFormCreate() {
+        document.getElementById("formCreatePitch").style.display = "block";
+    }
+
+    function closeFormCreate() {
+        document.getElementById("formCreatePitch").style.display = "none";
+    }
+</script>
+</body>
+</html>

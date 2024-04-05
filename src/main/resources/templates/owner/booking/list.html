@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OWNER - BOOKING</title>
+    <!--    Link-->
+    <div th:insert="~{template.html::link}"></div>
+</head>
+<body>
+<div class="app">
+    <!--    Header-->
+    <div th:insert="~{template.html::header}"></div>
+    <!-- Content -->
+    <div class="content row my-3 mx-3">
+        <div class="col-2">
+            <!--    Menu-->
+            <div>
+                <div class="d-flex">
+                    <h4 class="text-white pt-3 px-3">CHỦ SÂN</h4>
+                </div>
+                <hr>
+                <ul class="list-group admin__menu__left">
+                    <a class="text-decoration-none" href="/owner/myCompany"><li class="list-group-item bg-success text-white fw-bold py-3">SÂN BÓNG CỦA TÔI</li></a>
+                    <a class="text-decoration-none" href="/owner/booking"><li class="list-group-item bg-success text-white fw-bold py-3">QUẢN LÝ ĐƠN ĐẶT SÂN</li></a>
+                    <a class="text-decoration-none" href="/owner/report-income"><li class="list-group-item bg-success text-white fw-bold py-3">THỐNG KÊ DOANH THU</li></a>
+                </ul>
+            </div>
+        </div>
+        <div class="col-10">
+            <div>
+                <h4 class="text-danger">DANH SÁCH ĐƠN ĐẶT SÂN</h4>
+            </div>
+            <div class="btn-group my-3 d-flex justify-content-end" role="group" aria-label="Basic mixed styles example">
+
+                <form class="d-flex" method="get" th:action="@{/owner/booking/find}">
+                    <select class="form-select me-2" aria-label="Default select example" name="pitchName">
+                        <option value="">----- Chọn sân -----</option>
+                        <option th:each="pitch : ${pitchList}" th:value="${pitch.id}" th:text="${pitch.name}"></option>
+                    </select>
+                    <input type="date" class="form-control me-2" name="datePlay">
+                    <select class="form-select me-2" aria-label="Default select example" name="timePlay">
+                        <option value="">----- Chọn giờ -----</option>
+                        <option th:each="time : ${timeList}" th:value="${time}" th:text="${time}"></option>
+                    </select>
+                    <select class="form-select me-2" aria-label="Default select example" name="statusFind">
+                        <option value="">----- Chọn trạng thái -----</option>
+                        <option value="0">Đang chờ</option>
+                        <option value="1">Đã xác nhận</option>
+                        <option value="2">Đã từ chối</option>
+                        <option value="3">Đã thanh toán</option>
+                    </select>
+                    <button class="btn btn-success w-50" type="submit">Tìm kiếm</button>
+                </form>
+            </div>
+            <span style="color: blue" class="fw-bold" th:if="${messConfirm!=null}" th:text="${messConfirm}"></span>
+            <span style="color: red" class="fw-bold" th:if="${messDecline!=null}" th:text="${messDecline}"></span>
+            <span style="color: green" class="fw-bold" th:if="${messConfirmPay!=null}" th:text="${messConfirmPay}"></span>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Công ty</th>
+                    <th scope="col">Sân</th>
+                    <th scope="col">Khách hàng</th>
+                    <th scope="col">Ngày</th>
+                    <th scope="col">Khung giờ</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Ghi chú</th>
+                    <th scope="col">Voucher</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thời gian tạo đơn</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr class="align-middle" th:each="booking, iter: ${bookingList}" th:object="${booking}">
+                    <th scope="row" th:text="${iter.count}"></th>
+                    <td hidden th:text="*{id}"></td>
+                    <td th:text="*{pitch.company.name}"></td>
+                    <td th:text="*{pitch.name}"></td>
+
+                    <td><a th:href="@{/owner/booking/viewUser/{id}(id=*{user.id})}" th:text="*{user.username}"></a></td>
+
+                    <td th:text="*{date}"></td>
+                    <td th:text="*{time}"></td>
+                    <td th:text="*{price}"></td>
+                    <td th:text="*{note}"></td>
+
+                    <th:block th:if="${booking.voucher != null}">
+                        <td th:text="*{voucher.name}"></td>
+                    </th:block>
+                    <th:block th:if="${booking.voucher == null}">
+                        <td></td>
+                    </th:block>
+
+                    <td class="text-secondary fw-bold" th:if="*{status == 0}">Đang chờ</td>
+                    <td style="color: blue" class="fw-bold" th:if="*{status == 1}">Đã xác nhận</td>
+                    <td style="color: red" class="fw-bold" th:if="*{status == 2}">Đã từ chối</td>
+                    <td style="color: green" class="fw-bold" th:if="*{status == 3}">Đã thanh toán</td>
+
+                    <td th:text="*{dateTimeCreated}"></td>
+
+                    <td class="px-4">
+                        <div th:if="*{status == 0}" class="btn-group" role="group" aria-label="Basic mixed styles example">
+                            <a th:href="@{/owner/confirmBooking/{id}(id=${booking.id})}"><button type="button" class="btn btn-sm btn-primary mx-1">Xác nhận</button></a>
+                            <a th:href="@{/owner/declineBooking/{id}(id=${booking.id})}"><button type="button" class="btn btn-sm btn-warning mx-1">Từ chối</button></a>
+                        </div>
+                        <div th:if="*{status == 1}" class="btn-group" role="group" aria-label="Basic mixed styles example">
+                            <a th:href="@{/owner/confirmPay/{id}(id=${booking.id})}"><button type="button" class="btn btn-sm btn-success mx-1">Xác nhận thanh toán</button></a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!--    JS-->
+<div th:insert="~{template.html::script-js}"></div>
+</body>
+</html>

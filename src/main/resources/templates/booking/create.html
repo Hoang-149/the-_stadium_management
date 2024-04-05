@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PITCH</title>
+    <!--    Link-->
+    <div th:insert="~{template.html::link}"></div>
+</head>
+<body>
+<div class="app">
+    <!--    Header-->
+    <div th:insert="~{template.html::header}"></div>
+    <!-- Content -->
+    <div class="content row my-3 mx-lg-5">
+        <div class="col-9">
+                        <div class="py-2 my-2 bg-light d-flex" th:object="${company}">
+                            <img class="p-2" th:src="@{'/public/img/company/' + *{image}}" alt="" style="border-radius: 20px; width: 280px; height: 220px">
+                            <div class="ms-3 w-100">
+                                <span class="d-block my-3 text-danger fw-bold fs-5" th:text="*{name}"></span>
+                                <span class="d-block  my-3 text-secondary" style="font-weight: 500">
+                                            <i class="bi bi-geo-alt-fill me-2"></i>
+                                            <span th:text="${company.location.name}"></span>
+                                            <span>(</span>
+                                            <span th:text="*{address}"></span>
+                                            <span>)</span>
+                                        </span>
+
+                                <span class="d-block mb-5 text-success fw-bold">
+                                            <i class="bi bi-telephone-fill me-2"></i>
+                                            <span th:text="*{phoneNumber}"></span>
+                                        </span>
+                            </div>
+                        </div>
+
+            <h5 class="text-danger my-3">Đặt sân <span th:text="${pitch.name}"></span></h5>
+
+            <form th:action="@{/booking/create}" method="post" th:object="${booking}">
+                <div hidden class="mb-3">
+                    <label class="form-label text-success fw-bold">ID Pitch</label>
+                    <input readonly type="text" class="form-control" th:field="*{pitch}">
+                </div>
+                <div hidden class="mb-3">
+                    <label class="form-label text-success fw-bold">ID User</label>
+                    <input readonly type="text" class="form-control" th:field="*{user}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Ngày</label>
+                    <input type="date" class="form-control" th:field="*{date}">
+                    <span class="text-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Khung giờ</label>
+                    <select class="form-select" aria-label="Default select example" th:field="*{time}">
+                        <option th:each="timeItem: ${timeList}" th:value="${timeItem}" th:text="${timeItem}" th:id="time"></option>
+                    </select>
+                    <span class="text-danger" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Ghi chú</label>
+                    <input type="text" class="form-control" th:field="*{note}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-success fw-bold">Giá</label>
+                    <input hidden type="text" class="form-control" th:field="*{price}">
+                    <span class="text-danger fw-bold fs-5 px-5" th:text="*{price + ' VNĐ'}"></span>
+                </div>
+                <span th:if="*{voucher.id == 2}" class="text-danger d-block mb-3">Đã áp dụng mã giảm giá 50.000đ</span>
+                <div hidden class="mb-3">
+                    <label class="form-label text-success fw-bold">Voucher</label>
+                    <input readonly type="text" class="form-control" th:field="*{voucher}">
+                </div>
+                <div hidden class="mb-3">
+                    <label class="form-label text-success fw-bold">Status</label>
+                    <input type="text" class="form-control" th:field="*{status}">
+                </div>
+                <div hidden class="mb-3">
+                    <label class="form-label text-success fw-bold">DateTmeCreated</label>
+                    <input type="text" class="form-control" th:field="*{dateTimeCreated}">
+                </div>
+                <button type="submit" class="btn btn-primary">Đặt sân</button>
+            </form>
+
+        </div>
+        <div class="col-3">
+
+        </div>
+    </div>
+</div>
+<!--    JS-->
+<div th:insert="~{template.html::script-js}"></div>
+</body>
+</html>

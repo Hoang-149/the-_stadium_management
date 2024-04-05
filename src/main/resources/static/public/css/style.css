@@ -1,0 +1,35 @@
+.col-2 {
+    background-color: #198754;
+}
+.admin__menu__left {
+    border-radius: 0;
+}
+
+.admin__menu__left li:hover {
+    cursor: pointer;
+    font-size: 105%;
+}
+
+.cursor__hover:hover {
+    cursor: pointer;
+    color: green!important;
+    font-weight: bold;
+    font-size: 105%;
+}
+.header__option__btn {
+    height: 150%;
+    z-index: 99999999;
+    cursor: pointer;
+}
+.header__option__list {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 99999999;
+    display: none;
+}
+.header__option__list li {
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
